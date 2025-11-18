@@ -1,0 +1,170 @@
+[
+  {
+    "id": "ISSUE-101",
+    "title": "Checkout error 500 on mobile Safari",
+    "category": "Bug",
+    "severity": "Critical",
+    "symptoms": [
+      "500 error",
+      "mobile",
+      "checkout",
+      "safari",
+      "payment fails",
+      "internal server error"
+    ],
+    "recommended_action": "Escalate to payments team immediately; known Safari cookie issue. Reference: INC-2024-09-10"
+  },
+  {
+    "id": "ISSUE-102",
+    "title": "Login timeout after password reset",
+    "category": "Login",
+    "severity": "High",
+    "symptoms": ["timeout", "password reset", "cannot login", "session expired", "logged out"],
+    "recommended_action": "Ask user to clear browser cookies and cache. If persistent, check auth service logs. Attach KB article: AUTH-005"
+  },
+  {
+    "id": "ISSUE-103",
+    "title": "Slow dashboard loading on initial visit",
+    "category": "Performance",
+    "severity": "Medium",
+    "symptoms": ["slow", "dashboard", "loading", "performance", "takes forever", "spinner"],
+    "recommended_action": "Check browser version. Known issue with Chrome 120+ on Windows. Workaround: disable hardware acceleration. Fix in v2.4.0"
+  },
+  {
+    "id": "ISSUE-104",
+    "title": "Invoice PDF not generating",
+    "category": "Billing",
+    "severity": "Medium",
+    "symptoms": ["invoice", "pdf", "download fails", "billing", "blank page", "won't open"],
+    "recommended_action": "Regenerate invoice via admin panel. Check if invoice has special characters in customer name. Attach: KB-BILL-12"
+  },
+  {
+    "id": "ISSUE-105",
+    "title": "Two-factor authentication SMS not arriving",
+    "category": "Login",
+    "severity": "High",
+    "symptoms": [
+      "2fa",
+      "two factor",
+      "sms code",
+      "authentication",
+      "not receiving",
+      "text message"
+    ],
+    "recommended_action": "Verify phone number format (+1 prefix required). Check SMS provider status page. If urgent, offer email backup codes."
+  },
+  {
+    "id": "ISSUE-106",
+    "title": "API rate limit exceeded error",
+    "category": "Bug",
+    "severity": "Low",
+    "symptoms": ["rate limit", "429 error", "too many requests", "api", "throttled"],
+    "recommended_action": "Explain current rate limits (100 req/min). Suggest implementing exponential backoff. For higher limits, escalate to sales."
+  },
+  {
+    "id": "ISSUE-107",
+    "title": "CSV export returns empty file",
+    "category": "Bug",
+    "severity": "Medium",
+    "symptoms": ["export", "csv", "empty file", "download", "no data", "blank spreadsheet"],
+    "recommended_action": "Check if date range filter exceeds 1 year. Known timeout issue. Ask user to narrow date range or contact support for bulk export."
+  },
+  {
+    "id": "ISSUE-108",
+    "title": "How to integrate with Zapier",
+    "category": "Question/How-To",
+    "severity": "Low",
+    "symptoms": ["zapier", "integration", "how to", "setup", "connect", "webhook"],
+    "recommended_action": "Attach integration guide: DOC-ZAPIER-101. Offer to schedule onboarding call if enterprise customer."
+  },
+  {
+    "id": "ISSUE-109",
+    "title": "Subscription cancellation not processing",
+    "category": "Billing",
+    "severity": "High",
+    "symptoms": [
+      "cancel subscription",
+      "billing continues",
+      "refund",
+      "still charged",
+      "unsubscribe"
+    ],
+    "recommended_action": "Escalate to billing team immediately. Issue manual cancellation and pro-rated refund. Check for pending invoices."
+  },
+  {
+    "id": "ISSUE-110",
+    "title": "Dark mode images not visible",
+    "category": "Bug",
+    "severity": "Low",
+    "symptoms": ["dark mode", "images", "invisible", "ui", "can't see", "black on black"],
+    "recommended_action": "Known CSS issue affecting logo and profile pictures. Fix scheduled for v2.3.1 (next week). Workaround: use light mode temporarily."
+  },
+  {
+    "id": "ISSUE-111",
+    "title": "Password reset email not received",
+    "category": "Login",
+    "severity": "Medium",
+    "symptoms": [
+      "password reset",
+      "email not received",
+      "forgot password",
+      "reset link",
+      "didn't get email"
+    ],
+    "recommended_action": "Check spam/junk folder. Verify email address spelling. Manually resend via admin panel if needed. Check email service logs."
+  },
+  {
+    "id": "ISSUE-112",
+    "title": "Webhook delivery failures",
+    "category": "Bug",
+    "severity": "High",
+    "symptoms": [
+      "webhook",
+      "not delivered",
+      "timeout",
+      "integration",
+      "events missing",
+      "callback failed"
+    ],
+    "recommended_action": "Verify customer endpoint is publicly accessible and returns 200 OK within 5s. Check webhook logs for retry attempts. Increase timeout if needed."
+  },
+  {
+    "id": "ISSUE-113",
+    "title": "How to upgrade from Free to Pro plan",
+    "category": "Question/How-To",
+    "severity": "Low",
+    "symptoms": ["upgrade", "pro plan", "pricing", "billing", "paid tier", "subscription"],
+    "recommended_action": "Send pricing page link and feature comparison. If annual billing, offer 20% discount. Schedule demo for teams > 10 users."
+  },
+  {
+    "id": "ISSUE-114",
+    "title": "Search results showing deleted items",
+    "category": "Bug",
+    "severity": "Medium",
+    "symptoms": [
+      "search",
+      "deleted items",
+      "cache",
+      "stale data",
+      "old results",
+      "removed content"
+    ],
+    "recommended_action": "Clear Elasticsearch index cache. Known indexing lag (~15 min). If persists >24h, escalate to search team with customer ID."
+  },
+  {
+    "id": "ISSUE-115",
+    "title": "Mobile app crashes on startup (iOS 18)",
+    "category": "Bug",
+    "severity": "Critical",
+    "symptoms": [
+      "mobile app",
+      "crash",
+      "startup",
+      "cannot open",
+      "ios 18",
+      "force close",
+      "keeps crashing"
+    ],
+    "recommended_action": "Known compatibility issue with iOS 18.0. Fixed in app version 3.2.1. Ask user to update app from App Store immediately."
+  }
+]
