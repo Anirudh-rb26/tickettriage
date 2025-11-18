@@ -61,3 +61,7 @@ After upstream tools produce data (KB matches, metadata), the LLM receives a sin
 Tool calls are executed before the LLM.
 The main tool is the Knowledge Base Search, which runs a local similarity match against the ticket description.
 Its output is passed directly into the LLM prompt as matched_issues
+
+## Scaling
+
+A feature like this requires horizontal scaling since performance is not the bottleneck in this case, so there would me a max concurrent spinups to keep the costs managable and still allow concurrency and queueing with load balancing to handle more users.
