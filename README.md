@@ -38,6 +38,10 @@ to call the /triage endpoint you can run this curl command
 
 ## Curl Command
 
+Postman Images can be found: https://tickettriage.vercel.app/
+
+## Curl Command
+
 ```bash
 curl -X POST "https://tickettriage.vercel.app/api/triage" -H "x-forwarded-for: 123.45.67.89" -H "Content-Type: application/json" -d "{\"description\": \"This is a sample issue description for triage testing.\"}"
 ```
