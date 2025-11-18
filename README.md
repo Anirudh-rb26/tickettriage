@@ -36,7 +36,7 @@ the public API routes are available in app/api/
 
 to call the /triage endpoint you can run this curl command
 
-## Curl Command
+## Postman Images
 
 Postman Images can be found: https://tickettriage.vercel.app/
 
