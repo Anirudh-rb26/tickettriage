@@ -9,9 +9,18 @@ import TriageResults from '@/components/triage-results';
 import TestMessageItem from '@/components/test-message';
 import KBEntryCard from '@/components/knowledge-base-entry';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { KnowledgeBaseEntry, QueueRequest, QueueStatus, TriageResponse, TriageResult } from '@/lib/type';
+import Image from 'next/image';
 
+const PostmanImages = [
+  "/health.png",
+  "/kb.png",
+  "/queue.png",
+  "/triage.png",
+]
 
 // Test Messages Component
 const TestMessages = ({
@@ -51,24 +60,24 @@ const KnowledgeBaseModal = ({
   entries: KnowledgeBaseEntry[];
 }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="max-w-[96vw] w-full max-h-[92vh] overflow-hidden flex flex-col gap-0 p-0">
-      <DialogHeader className="px-8 pt-8 pb-6 border-b">
-        <DialogTitle className="text-3xl font-semibold">
+    <DialogContent className="max-w-[90vw] w-full max-h-[85vh]">
+      <DialogHeader>
+        <DialogTitle className="text-2xl">
           Knowledge Base
-          <span className="text-muted-foreground text-xl font-normal ml-3">
-            {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
-          </span>
         </DialogTitle>
+        <DialogDescription>
+          {entries.length} {entries.length === 1 ? 'entry' : 'entries'} available
+        </DialogDescription>
       </DialogHeader>
-      <div className="overflow-y-auto flex-1 px-8 py-6">
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <ScrollArea className="h-[calc(85vh-180px)] pr-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {entries.map(entry => (
             <KBEntryCard key={entry.id} entry={entry} />
           ))}
         </div>
-      </div>
-      <div className="flex justify-end px-8 py-6 border-t bg-muted/30">
-        <Button onClick={onClose} variant="outline" size="lg">
+      </ScrollArea>
+      <div className="flex justify-end gap-2 pt-4">
+        <Button onClick={onClose} variant="outline">
           Close
         </Button>
       </div>
@@ -76,14 +85,97 @@ const KnowledgeBaseModal = ({
   </Dialog>
 );
 
+const ImageModal = ({
+  isOpen,
+  onClose
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+
+  return (
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-[90vw] w-full max-h-[85vh]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">
+              Postman API Screenshots
+            </DialogTitle>
+            <DialogDescription>
+              Visual documentation of API endpoints and responses
+            </DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="h-[calc(85vh-180px)] pr-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              {PostmanImages.map((imagePath, index) => (
+                <Card
+                  key={index}
+                  className="overflow-hidden border-2 transition-all duration-200 hover:border-primary hover:shadow-lg cursor-pointer"
+                  onClick={() => setFullscreenImage(imagePath)}
+                >
+                  <CardContent className="p-0">
+                    <div className="relative aspect-video bg-muted">
+                      <Image
+                        width={800}
+                        height={600}
+                        src={imagePath}
+                        alt={`Postman screenshot ${index + 1}`}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="p-3 border-t">
+                      <p className="text-sm text-muted-foreground">
+                        Screenshot {index + 1} of {PostmanImages.length}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
+          <div className="flex justify-end gap-2 pt-4">
+            <Button onClick={onClose} variant="outline">
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {fullscreenImage && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+          onClick={() => setFullscreenImage(null)}
+        >
+          <Button
+            variant="outline"
+            size="icon"
+            className="absolute top-4 right-4 z-10"
+            onClick={() => setFullscreenImage(null)}
+          >
+            <span className="sr-only">Close</span>
+            ✕
+          </Button>
+          <Image
+            src={fullscreenImage}
+            alt="Fullscreen view"
+            width={1920}
+            height={1080}
+            className="max-w-[95vw] max-h-[95vh] object-contain"
+          />
+        </div>
+      )}
+    </>
+  );
+}
 
 // Queue Request Card Component
 const QueueRequestCard = ({ request }: { request: QueueRequest }) => {
   const statusColors: Record<string, string> = {
-    completed: 'bg-green-500/10 border-green-500/20',
-    processing: 'bg-blue-500/10 border-blue-500/20',
-    failed: 'bg-red-500/10 border-red-500/20',
-    queued: 'bg-yellow-500/10 border-yellow-500/20'
+    completed: 'border-green-500/50 bg-green-500/5',
+    processing: 'border-blue-500/50 bg-blue-500/5',
+    failed: 'border-destructive/50 bg-destructive/5',
+    queued: 'border-yellow-500/50 bg-yellow-500/5'
   };
 
   const badgeVariants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
@@ -94,24 +186,24 @@ const QueueRequestCard = ({ request }: { request: QueueRequest }) => {
   };
 
   return (
-    <Card className={`${statusColors[request.status] || statusColors.queued} border-2`}>
-      <CardContent className="pt-4">
+    <Card className={`${statusColors[request.status] || statusColors.queued}`}>
+      <CardContent className="pt-6">
         <div className="flex justify-between items-start mb-3 gap-2">
-          <code className="text-xs font-mono text-muted-foreground px-2 py-1 bg-muted rounded">
+          <code className="text-xs font-mono text-muted-foreground bg-muted px-2 py-1 rounded">
             {request.id}
           </code>
           <Badge variant={badgeVariants[request.status] || 'outline'} className="capitalize">
             {request.status}
           </Badge>
         </div>
-        <div className="text-sm mb-2 line-clamp-2">{request.description}</div>
+        <p className="text-sm mb-2 line-clamp-2">{request.description}</p>
         {request.position && (
-          <div className="text-xs text-muted-foreground mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             Position in queue: <span className="font-medium">{request.position}</span>
-          </div>
+          </p>
         )}
         {request.error && (
-          <div className="text-xs text-destructive mt-2 p-2 bg-destructive/10 rounded">
+          <div className="text-xs text-destructive mt-2 p-2 bg-destructive/10 rounded border border-destructive/20">
             {request.error}
           </div>
         )}
@@ -134,28 +226,31 @@ const QueueStatusModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[96vw] w-full max-h-[92vh] overflow-hidden flex flex-col gap-0 p-0">
-        <DialogHeader className="px-8 pt-8 pb-6 border-b">
-          <DialogTitle className="text-3xl font-semibold">Queue Status</DialogTitle>
+      <DialogContent className="max-w-[90vw] w-full max-h-[85vh]">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">Queue Status</DialogTitle>
+          <DialogDescription>
+            Current status and recent requests
+          </DialogDescription>
         </DialogHeader>
+        <ScrollArea className="h-[calc(85vh-180px)] pr-4">
+          <div className="space-y-6">
+            <div>
+              <QueueStats stats={status} />
+            </div>
 
-        <div className="overflow-y-auto flex-1 px-8 py-6">
-          <div className="mb-8">
-            <QueueStats stats={status} />
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Recent Requests</h3>
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {status.requests.slice(0, 30).map(req => (
-                <QueueRequestCard key={req.id} request={req} />
-              ))}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Recent Requests</h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {status.requests.slice(0, 30).map(req => (
+                  <QueueRequestCard key={req.id} request={req} />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="flex justify-end px-8 py-6 border-t bg-muted/30">
-          <Button onClick={onClose} variant="outline" size="lg">
+        </ScrollArea>
+        <div className="flex justify-end gap-2 pt-4">
+          <Button onClick={onClose} variant="outline">
             Close
           </Button>
         </div>
@@ -167,6 +262,7 @@ const QueueStatusModal = ({
 // Main Component
 export default function Home() {
   const [showKB, setShowKB] = useState(false);
+  const [showImages, setShowImages] = useState(false);
   const [showQueue, setShowQueue] = useState(false);
   const [kb, setKB] = useState<KnowledgeBaseEntry[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
@@ -245,12 +341,13 @@ export default function Home() {
   }, [showQueue]);
 
   return (
-    <div className="w-9xl min-h-screen">
-      <div className="mx-auto p-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
         <ActionButtons
           onViewKB={fetchKB}
           onViewQueue={fetchQueue}
           kbCount={kb.length || 15}
+          setShowImages={setShowImages}
         />
         <TestMessages
           messages={testMessages}
@@ -264,6 +361,9 @@ export default function Home() {
           onClose={() => setShowKB(false)}
           entries={kb}
         />
+
+        <ImageModal isOpen={showImages} onClose={() => setShowImages(false)} />
+
         <QueueStatusModal
           isOpen={showQueue}
           onClose={() => setShowQueue(false)}
