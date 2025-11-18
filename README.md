@@ -1,8 +1,24 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+Ensure you have NPM and Node Installed on your machine
+
 ## Getting Started
 
-First, run the development server:
+First, install all dependent packages:
+
+```bash
+npm i
+# or
+yarn install
+```
+
+then create a .env file in your root folder and add your API_KEY's
+
+```
+PERPLEXITY_API_KEY=pplx-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+finally run your development server.
 
 ```bash
 npm run dev
@@ -16,21 +32,28 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+the public API routes are available in app/api/
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+to call the /triage endpoint you can run this curl command
 
-## Learn More
+## Curl Command
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+curl -X POST "https://tickettriage.vercel.app/api/triage" -H "x-forwarded-for: 123.45.67.89" -H "Content-Type: application/json" -d "{\"description\": \"This is a sample issue description for triage testing.\"}"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How is the LLM used?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The system is a fixed-workflow triage agent. It does not make autonomous decision or the REACT pattern.
+The LLM is used only for classification and structured interpretation.
+After upstream tools produce data (KB matches, metadata), the LLM receives a single consolidated prompt and returns:
 
-## Deploy on Vercel
+- summary
+- category
+- severity
+- known_issue vs new_issue
+- suggested_next_step
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Tool calls are executed before the LLM.
+The main tool is the Knowledge Base Search, which runs a local similarity match against the ticket description.
+Its output is passed directly into the LLM prompt as matched_issues

@@ -1,8 +1,4 @@
 export const config = {
-  gemini: {
-    apiKey: process.env.GEMINI_API_KEY || "",
-    model: "gemini-2.0-flash-exp",
-  },
   queue: {
     maxConcurrent: 1, // Process one at a time to avoid rate limits
     retryAttempts: 3,
